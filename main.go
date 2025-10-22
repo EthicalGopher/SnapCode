@@ -12,8 +12,8 @@ import (
 )
 
 type Storage struct {
-	Lang string `json:"lang"`
-	Code string `json:"code"`
+	Lang  string            `json:"lang"`
+	Snipt map[string]string `json:"snipt"`
 }
 
 var Store []Storage
@@ -70,6 +70,9 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
+			var title string
+			fmt.Println("Enter the title of your code snipt : ")
+			fmt.Scan(&title)
 			fmt.Println("Enter the code : ")
 			code := ""
 			for {
@@ -82,19 +85,17 @@ func main() {
 				}
 				code += text + "\n"
 			}
-
-			Store = append(Store, Storage{Code: code, Lang: lang})
+			snipt := make(map[string]string)
+			snipt[title] = code
+			Store = append(Store, Storage{Lang: lang, Snipt: snipt})
 			fmt.Println("Success")
 		},
 	})
 	CMD.AddCommand(&cobra.Command{
 		Use:   "show",
-		Short: "shows the saved items",
+		Short: "shows all the snipts",
 		Run: func(cmd *cobra.Command, args []string) {
-			for i, data := range Store {
-				fmt.Println(i, ". Language : ", data.Lang)
-				fmt.Println("Code : \n", data.Code)
-			}
+			Bubbletea()
 		},
 	})
 }
